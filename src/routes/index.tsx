@@ -34,30 +34,30 @@ const features = [
   {
     icon: Network,
     title: "Cross-college network",
-    desc: "हर college, हर branch, हर year — सब एक जगह। अपनी university की दीवारों से बाहर निकलो।",
+    desc: "Every college, every branch, every year — all in one place. Step beyond your university walls.",
   },
   {
     icon: Briefcase,
     title: "Real project collabs",
-    desc: "Idea से launch तक — teammates ढूँढो, tasks बाँटो, और एक साथ कुछ बड़ा बनाओ।",
+    desc: "From idea to launch — find teammates, split tasks, and build something meaningful together.",
   },
   {
     icon: MessageSquare,
     title: "Real-time messaging",
-    desc: "Typing indicators, online status, और team chats — conversations जो projects को आगे बढ़ाएं।",
+    desc: "Typing indicators, online status, and team chats — conversations that move projects forward.",
   },
   {
     icon: Sparkles,
     title: "Smart matchmaking",
-    desc: "Skill, interest और goal के हिसाब से सही teammate तुम्हें खुद ढूँढ लेगा।",
+    desc: "Discover the right teammate by skill, interest, and goal — matches that actually click.",
   },
 ];
 
 const journey = [
-  { icon: GraduationCap, step: "01", title: "Sign up करो", desc: "किसी भी college की email से 30 seconds में profile बनाओ।" },
-  { icon: Lightbulb, step: "02", title: "Idea share करो", desc: "Feed पर अपना idea, project या thought दुनिया को बताओ।" },
-  { icon: Users, step: "03", title: "Team बनाओ", desc: "Skills match करके सही students के साथ team बनाओ।" },
-  { icon: Rocket, step: "04", title: "Ship करो", desc: "Build करो, launch करो, portfolio में add करो — career बनाओ।" },
+  { icon: GraduationCap, step: "01", title: "Sign up", desc: "Create your profile in 30 seconds with any college email." },
+  { icon: Lightbulb, step: "02", title: "Share an idea", desc: "Post your idea, project, or thought to a community that listens." },
+  { icon: Users, step: "03", title: "Build a team", desc: "Match by skills and join forces with students who get it." },
+  { icon: Rocket, step: "04", title: "Ship it", desc: "Build, launch, add it to your portfolio — and start your career story." },
 ];
 
 const builtFor = [
@@ -72,19 +72,19 @@ const builtFor = [
 const testimonials = [
   {
     quote:
-      "मुझे यहाँ एक ऐसी teammate मिली जो दूसरे state के college से थी — हमने मिलकर एक SaaS product launch किया जो आज 2k users use करते हैं।",
+      "I found a teammate from a college in another state — together we launched a SaaS product that 2k users actively use today.",
     name: "Aarav S.",
     role: "CSE, 3rd year",
   },
   {
     quote:
-      "College में coding club नहीं था। UniSphere पर मुझे 4 लोगों की team मिली और हमने पहला hackathon साथ जीता।",
+      "My college didn't have a coding club. On UniSphere I found a team of 4 and we won our very first hackathon together.",
     name: "Priya M.",
     role: "ECE, 2nd year",
   },
   {
     quote:
-      "Recruiters अब मेरा resume नहीं, मेरा UniSphere profile माँगते हैं। Real projects, real impact — यही फ़र्क पड़ता है।",
+      "Recruiters now ask for my UniSphere profile, not my resume. Real projects, real impact — that's the difference.",
     name: "Rohan K.",
     role: "IT, Final year",
   },
@@ -118,36 +118,36 @@ function Landing() {
             <div className="grid items-center gap-12 lg:grid-cols-2">
               <div>
                 <span className="inline-flex items-center gap-1.5 rounded-full border bg-surface px-3 py-1 text-xs font-medium text-primary shadow-sm">
-                  <Zap className="h-3.5 w-3.5" /> India का first inter-college collaboration platform
+                  <Zap className="h-3.5 w-3.5" /> India's first inter-college collaboration platform
                 </span>
                 <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-                  जहाँ <span className="text-primary">ideas</span> teams बनते हैं,
+                  Where <span className="text-primary">ideas</span> become teams,
                   <br />
-                  और teams <span className="text-primary">future</span> बनाती हैं।
+                  and teams shape the <span className="text-primary">future</span>.
                 </h1>
                 <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
-                  UniSphere एक ऐसा ecosystem है जहाँ हर college के students मिलते हैं, projects build करते हैं,
-                  hackathons जीतते हैं, और अपने career की पहली असली कहानी यहाँ से शुरू करते हैं।
+                  UniSphere is the ecosystem where students from every college meet, build real projects,
+                  win hackathons, and write the first true chapter of their career — together.
                 </p>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Button asChild size="lg" className="gap-2">
                     <Link to="/signup">
-                      अभी शुरू करो — Free है <ArrowRight className="h-4 w-4" />
+                      Get started — it's free <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline">
-                    <Link to="/login">मेरा already account है</Link>
+                    <Link to="/login">I already have an account</Link>
                   </Button>
                 </div>
                 <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-success" /> कोई credit card नहीं
+                    <CheckCircle2 className="h-4 w-4 text-success" /> No credit card
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-success" /> 30 second signup
+                    <CheckCircle2 className="h-4 w-4 text-success" /> 30-second signup
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-success" /> सभी colleges welcome
+                    <CheckCircle2 className="h-4 w-4 text-success" /> All colleges welcome
                   </span>
                 </div>
               </div>
@@ -197,13 +197,13 @@ function Landing() {
         <section className="mx-auto max-w-6xl px-4 py-20">
           <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-              तुम्हारी journey
+              Your journey
             </span>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              4 steps में अपना college experience बदल दो
+              Transform your college experience in 4 steps
             </h2>
             <p className="mt-3 text-muted-foreground">
-              ज़रूरत है सिर्फ़ एक email की — बाकी सब UniSphere तुम्हें देगा।
+              All you need is one email — UniSphere takes care of the rest.
             </p>
           </div>
 
@@ -230,10 +230,10 @@ function Landing() {
             <div className="grid items-center gap-10 lg:grid-cols-[1fr_2fr]">
               <div>
                 <h2 className="text-3xl font-semibold tracking-tight">
-                  हर तरह के <span className="text-primary">student</span> के लिए।
+                  Built for every kind of <span className="text-primary">student</span>.
                 </h2>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  चाहे तुम code लिखते हो, design करते हो, या business idea रखते हो — यहाँ तुम्हारी जगह है।
+                  Whether you write code, craft designs, or carry a business idea — there's a place for you here.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -257,10 +257,10 @@ function Landing() {
         <section className="mx-auto max-w-6xl px-4 py-20">
           <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-              Students की कहानियाँ
+              Student stories
             </span>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              इनकी जैसी कहानी अगली तुम्हारी हो सकती है
+              The next story like theirs could be yours
             </h2>
           </div>
 
@@ -301,15 +301,15 @@ function Landing() {
             />
             <div className="relative">
               <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                तुम्हारा next big project एक click दूर है।
+                Your next big project is one click away.
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-primary-foreground/85">
-                Profile बनाओ, teammates ढूँढो, और अपने college life को सिर्फ़ classes से कुछ ज़्यादा बनाओ।
+                Build your profile, find your teammates, and turn your college years into something far bigger than classes.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg" variant="secondary" className="gap-2">
                   <Link to="/signup">
-                    Free में join करो <ArrowRight className="h-4 w-4" />
+                    Join free <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button
@@ -318,7 +318,7 @@ function Landing() {
                   variant="outline"
                   className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
                 >
-                  <Link to="/login">पहले से account है?</Link>
+                  <Link to="/login">Already have an account?</Link>
                 </Button>
               </div>
             </div>
@@ -329,7 +329,7 @@ function Landing() {
       <footer className="border-t bg-surface py-8 text-center text-xs text-muted-foreground">
         <div className="mx-auto max-w-6xl px-4">
           <Logo className="mx-auto" />
-          <p className="mt-3">Students के लिए, students के द्वारा बनाया गया platform।</p>
+          <p className="mt-3">A platform built for students, by students.</p>
           <p className="mt-2">© {new Date().getFullYear()} UniSphere · Inter-college collaboration ecosystem</p>
         </div>
       </footer>
