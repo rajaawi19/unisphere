@@ -230,10 +230,10 @@ function Landing() {
             <div className="grid items-center gap-10 lg:grid-cols-[1fr_2fr]">
               <div>
                 <h2 className="text-3xl font-semibold tracking-tight">
-                  हर तरह के <span className="text-primary">student</span> के लिए।
+                  Built for every kind of <span className="text-primary">student</span>.
                 </h2>
                 <p className="mt-3 text-sm text-muted-foreground">
-                  चाहे तुम code लिखते हो, design करते हो, या business idea रखते हो — यहाँ तुम्हारी जगह है।
+                  Whether you write code, craft designs, or carry a business idea — there's a place for you here.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
