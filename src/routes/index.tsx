@@ -72,19 +72,19 @@ const builtFor = [
 const testimonials = [
   {
     quote:
-      "मुझे यहाँ एक ऐसी teammate मिली जो दूसरे state के college से थी — हमने मिलकर एक SaaS product launch किया जो आज 2k users use करते हैं।",
+      "I found a teammate from a college in another state — together we launched a SaaS product that 2k users actively use today.",
     name: "Aarav S.",
     role: "CSE, 3rd year",
   },
   {
     quote:
-      "College में coding club नहीं था। UniSphere पर मुझे 4 लोगों की team मिली और हमने पहला hackathon साथ जीता।",
+      "My college didn't have a coding club. On UniSphere I found a team of 4 and we won our very first hackathon together.",
     name: "Priya M.",
     role: "ECE, 2nd year",
   },
   {
     quote:
-      "Recruiters अब मेरा resume नहीं, मेरा UniSphere profile माँगते हैं। Real projects, real impact — यही फ़र्क पड़ता है।",
+      "Recruiters now ask for my UniSphere profile, not my resume. Real projects, real impact — that's the difference.",
     name: "Rohan K.",
     role: "IT, Final year",
   },
