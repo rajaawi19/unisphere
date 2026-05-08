@@ -301,15 +301,15 @@ function Landing() {
             />
             <div className="relative">
               <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                तुम्हारा next big project एक click दूर है।
+                Your next big project is one click away.
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-primary-foreground/85">
-                Profile बनाओ, teammates ढूँढो, और अपने college life को सिर्फ़ classes से कुछ ज़्यादा बनाओ।
+                Build your profile, find your teammates, and turn your college years into something far bigger than classes.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Button asChild size="lg" variant="secondary" className="gap-2">
                   <Link to="/signup">
-                    Free में join करो <ArrowRight className="h-4 w-4" />
+                    Join free <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
                 <Button
@@ -318,7 +318,7 @@ function Landing() {
                   variant="outline"
                   className="border-primary-foreground/30 bg-transparent text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground"
                 >
-                  <Link to="/login">पहले से account है?</Link>
+                  <Link to="/login">Already have an account?</Link>
                 </Button>
               </div>
             </div>
@@ -329,7 +329,7 @@ function Landing() {
       <footer className="border-t bg-surface py-8 text-center text-xs text-muted-foreground">
         <div className="mx-auto max-w-6xl px-4">
           <Logo className="mx-auto" />
-          <p className="mt-3">Students के लिए, students के द्वारा बनाया गया platform।</p>
+          <p className="mt-3">A platform built for students, by students.</p>
           <p className="mt-2">© {new Date().getFullYear()} UniSphere · Inter-college collaboration ecosystem</p>
         </div>
       </footer>
