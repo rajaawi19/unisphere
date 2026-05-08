@@ -176,22 +176,69 @@ function Landing() {
           </div>
         </section>
 
-        {/* Stats */}
+        {/* Why UniSphere */}
         <section className="border-y bg-surface">
-          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 py-10 text-center sm:grid-cols-4">
-            {[
-              { v: "10k+", l: "Active students" },
-              { v: "200+", l: "Live projects" },
-              { v: "50+", l: "Colleges connected" },
-              { v: "1.2k+", l: "Teams formed" },
-            ].map((s) => (
-              <div key={s.l}>
-                <div className="text-3xl font-semibold text-primary">{s.v}</div>
-                <div className="mt-1 text-xs text-muted-foreground">{s.l}</div>
-              </div>
-            ))}
+          <div className="mx-auto max-w-6xl px-4 py-16">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="text-xs font-semibold uppercase tracking-wider text-primary">
+                Why UniSphere
+              </span>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+                College should be your launchpad — not a waiting room.
+              </h2>
+              <p className="mt-3 text-muted-foreground">
+                Most students graduate with a degree but no portfolio, no network, no proof of what they can build.
+                UniSphere fixes that — from day one of your first semester.
+              </p>
+            </div>
+
+            <div className="mt-12 grid gap-4 md:grid-cols-3">
+              {[
+                {
+                  icon: Trophy,
+                  title: "Build a portfolio that stands out",
+                  desc: "Real projects with real teammates beat any course certificate. Recruiters notice the difference.",
+                },
+                {
+                  icon: Globe,
+                  title: "Break out of your campus bubble",
+                  desc: "Your next co-founder, mentor, or best friend is studying at a college you've never even visited.",
+                },
+                {
+                  icon: Zap,
+                  title: "Move from learning to shipping",
+                  desc: "Stop watching tutorials in isolation. Join a team, take ownership of a feature, and ship something real.",
+                },
+              ].map((b) => (
+                <div
+                  key={b.title}
+                  className="rounded-2xl border bg-background p-6 transition hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
+                    <b.icon className="h-5 w-5" />
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold">{b.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{b.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-10 grid gap-3 rounded-2xl border bg-background p-6 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                "Find teammates by skill",
+                "Join open project rooms",
+                "Compete in hackathons",
+                "Showcase what you build",
+              ].map((item) => (
+                <div key={item} className="flex items-center gap-2 text-sm">
+                  <CheckCircle2 className="h-4 w-4 shrink-0 text-success" />
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
+
 
         {/* Journey */}
         <section className="mx-auto max-w-6xl px-4 py-20">
