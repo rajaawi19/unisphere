@@ -257,10 +257,10 @@ function Landing() {
         <section className="mx-auto max-w-6xl px-4 py-20">
           <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-              Students की कहानियाँ
+              Student stories
             </span>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              इनकी जैसी कहानी अगली तुम्हारी हो सकती है
+              The next story like theirs could be yours
             </h2>
           </div>
 
