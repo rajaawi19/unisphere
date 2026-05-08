@@ -34,30 +34,30 @@ const features = [
   {
     icon: Network,
     title: "Cross-college network",
-    desc: "हर college, हर branch, हर year — सब एक जगह। अपनी university की दीवारों से बाहर निकलो।",
+    desc: "Every college, every branch, every year — all in one place. Step beyond your university walls.",
   },
   {
     icon: Briefcase,
     title: "Real project collabs",
-    desc: "Idea से launch तक — teammates ढूँढो, tasks बाँटो, और एक साथ कुछ बड़ा बनाओ।",
+    desc: "From idea to launch — find teammates, split tasks, and build something meaningful together.",
   },
   {
     icon: MessageSquare,
     title: "Real-time messaging",
-    desc: "Typing indicators, online status, और team chats — conversations जो projects को आगे बढ़ाएं।",
+    desc: "Typing indicators, online status, and team chats — conversations that move projects forward.",
   },
   {
     icon: Sparkles,
     title: "Smart matchmaking",
-    desc: "Skill, interest और goal के हिसाब से सही teammate तुम्हें खुद ढूँढ लेगा।",
+    desc: "Discover the right teammate by skill, interest, and goal — matches that actually click.",
   },
 ];
 
 const journey = [
-  { icon: GraduationCap, step: "01", title: "Sign up करो", desc: "किसी भी college की email से 30 seconds में profile बनाओ।" },
-  { icon: Lightbulb, step: "02", title: "Idea share करो", desc: "Feed पर अपना idea, project या thought दुनिया को बताओ।" },
-  { icon: Users, step: "03", title: "Team बनाओ", desc: "Skills match करके सही students के साथ team बनाओ।" },
-  { icon: Rocket, step: "04", title: "Ship करो", desc: "Build करो, launch करो, portfolio में add करो — career बनाओ।" },
+  { icon: GraduationCap, step: "01", title: "Sign up", desc: "Create your profile in 30 seconds with any college email." },
+  { icon: Lightbulb, step: "02", title: "Share an idea", desc: "Post your idea, project, or thought to a community that listens." },
+  { icon: Users, step: "03", title: "Build a team", desc: "Match by skills and join forces with students who get it." },
+  { icon: Rocket, step: "04", title: "Ship it", desc: "Build, launch, add it to your portfolio — and start your career story." },
 ];
 
 const builtFor = [
