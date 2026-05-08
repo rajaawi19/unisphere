@@ -118,36 +118,36 @@ function Landing() {
             <div className="grid items-center gap-12 lg:grid-cols-2">
               <div>
                 <span className="inline-flex items-center gap-1.5 rounded-full border bg-surface px-3 py-1 text-xs font-medium text-primary shadow-sm">
-                  <Zap className="h-3.5 w-3.5" /> India का first inter-college collaboration platform
+                  <Zap className="h-3.5 w-3.5" /> India's first inter-college collaboration platform
                 </span>
                 <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
-                  जहाँ <span className="text-primary">ideas</span> teams बनते हैं,
+                  Where <span className="text-primary">ideas</span> become teams,
                   <br />
-                  और teams <span className="text-primary">future</span> बनाती हैं।
+                  and teams shape the <span className="text-primary">future</span>.
                 </h1>
                 <p className="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
-                  UniSphere एक ऐसा ecosystem है जहाँ हर college के students मिलते हैं, projects build करते हैं,
-                  hackathons जीतते हैं, और अपने career की पहली असली कहानी यहाँ से शुरू करते हैं।
+                  UniSphere is the ecosystem where students from every college meet, build real projects,
+                  win hackathons, and write the first true chapter of their career — together.
                 </p>
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Button asChild size="lg" className="gap-2">
                     <Link to="/signup">
-                      अभी शुरू करो — Free है <ArrowRight className="h-4 w-4" />
+                      Get started — it's free <ArrowRight className="h-4 w-4" />
                     </Link>
                   </Button>
                   <Button asChild size="lg" variant="outline">
-                    <Link to="/login">मेरा already account है</Link>
+                    <Link to="/login">I already have an account</Link>
                   </Button>
                 </div>
                 <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-success" /> कोई credit card नहीं
+                    <CheckCircle2 className="h-4 w-4 text-success" /> No credit card
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-success" /> 30 second signup
+                    <CheckCircle2 className="h-4 w-4 text-success" /> 30-second signup
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4 text-success" /> सभी colleges welcome
+                    <CheckCircle2 className="h-4 w-4 text-success" /> All colleges welcome
                   </span>
                 </div>
               </div>
