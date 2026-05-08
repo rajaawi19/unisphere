@@ -73,8 +73,9 @@ function EditProfilePage() {
   }, [user]);
 
   if (!form) return null;
+  const current = form;
 
-  function set<K extends keyof typeof form>(k: K, v: (typeof form)[K]) {
+  function set<K extends keyof typeof current>(k: K, v: (typeof current)[K]) {
     setForm((f) => (f ? { ...f, [k]: v } : f));
   }
 
