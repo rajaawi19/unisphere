@@ -197,13 +197,13 @@ function Landing() {
         <section className="mx-auto max-w-6xl px-4 py-20">
           <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-              तुम्हारी journey
+              Your journey
             </span>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              4 steps में अपना college experience बदल दो
+              Transform your college experience in 4 steps
             </h2>
             <p className="mt-3 text-muted-foreground">
-              ज़रूरत है सिर्फ़ एक email की — बाकी सब UniSphere तुम्हें देगा।
+              All you need is one email — UniSphere takes care of the rest.
             </p>
           </div>
 
