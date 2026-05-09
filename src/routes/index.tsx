@@ -250,6 +250,94 @@ function Landing() {
           </div>
         </section>
 
+        {/* FAQ */}
+        <section className="border-t bg-surface">
+          <div className="mx-auto max-w-5xl px-4 py-20">
+            <div className="mx-auto max-w-2xl text-center">
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-primary">
+                <HelpCircle className="h-3.5 w-3.5" /> Frequently asked
+              </span>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+                Everything you wanted to ask before signing up
+              </h2>
+              <p className="mt-3 text-muted-foreground">
+                Quick, honest answers about email verification, login, privacy, and how we match you with the right people.
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_2fr]">
+              <div className="space-y-3">
+                {[
+                  { icon: Mail, label: "Email verification" },
+                  { icon: KeyRound, label: "OTP login" },
+                  { icon: Lock, label: "Your privacy" },
+                  { icon: Sparkles, label: "How matching works" },
+                ].map((t) => (
+                  <div
+                    key={t.label}
+                    className="flex items-center gap-3 rounded-xl border bg-background px-4 py-3 shadow-sm"
+                  >
+                    <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary/10 text-primary">
+                      <t.icon className="h-4 w-4" />
+                    </div>
+                    <span className="text-sm font-medium">{t.label}</span>
+                  </div>
+                ))}
+                <div className="rounded-xl border bg-primary/5 p-4 text-xs leading-relaxed text-muted-foreground">
+                  <ShieldCheck className="mb-2 h-5 w-5 text-primary" />
+                  We treat your data the way we'd want our own treated — minimal collection, no selling, ever.
+                </div>
+              </div>
+
+              <Accordion type="single" collapsible className="rounded-2xl border bg-background px-2">
+                {[
+                  {
+                    q: "Do I need an official college email to sign up?",
+                    a: "Any email works to get started — Gmail, Outlook, college domain, anything. If you sign up with a recognised college domain (.edu, .ac.in, etc.) your profile gets a verified college badge automatically. Personal emails can still join, post, and collaborate; the badge unlocks once you verify a college email later from settings.",
+                  },
+                  {
+                    q: "How does email verification work?",
+                    a: "After you create an account, we send a 6-digit OTP to your inbox. Enter it on the verification screen and you're in — no password resets, no magic links to hunt down. The code expires in 10 minutes, and you can request a new one anytime.",
+                  },
+                  {
+                    q: "What is OTP login and why use it?",
+                    a: "OTP (One-Time Password) is a short code emailed to you when you sign in. You don't have to remember another password, and even if someone guesses your email, they can't log in without access to your inbox. You can also set a regular password if you prefer — both options work.",
+                  },
+                  {
+                    q: "Who can see my profile and posts?",
+                    a: "Your profile is visible to other signed-in students by default — that's the point of a collaboration network. You control what's on it: bio, skills, projects, links. Direct messages are private. Project rooms are visible only to members. Switch to a private profile anytime from settings.",
+                  },
+                  {
+                    q: "How do you handle my data and privacy?",
+                    a: "We collect only what's needed to make the platform work: your email, profile info you choose to share, and activity inside UniSphere. We never sell your data, never share it with recruiters without your consent, and you can export or permanently delete your account in one click.",
+                  },
+                  {
+                    q: "How does smart matchmaking actually work?",
+                    a: "When you fill out your skills, interests, year, and the kind of projects you want to build, our matching engine surfaces people whose strengths complement yours — like a backend dev looking for a designer, or a researcher looking for a frontend partner. Nothing happens automatically — you decide whom to connect with.",
+                  },
+                  {
+                    q: "Is UniSphere free?",
+                    a: "Yes — completely free for students. Core features like profiles, feeds, messaging, and project collaboration will always stay free. We may add optional premium tools for clubs, fests, or recruiters later, but never gate the student experience.",
+                  },
+                  {
+                    q: "Can I delete my account later?",
+                    a: "Absolutely. Settings → Account → Delete account removes everything tied to you within 30 days. No emails to write, no support tickets, no friction.",
+                  },
+                ].map((item, i) => (
+                  <AccordionItem key={i} value={`item-${i}`} className="border-b last:border-0">
+                    <AccordionTrigger className="px-3 text-left text-sm font-semibold hover:no-underline">
+                      {item.q}
+                    </AccordionTrigger>
+                    <AccordionContent className="px-3 text-sm leading-relaxed text-muted-foreground">
+                      {item.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          </div>
+        </section>
+
 
         {/* Journey */}
         <section className="mx-auto max-w-6xl px-4 py-20">
