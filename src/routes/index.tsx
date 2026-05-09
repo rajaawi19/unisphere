@@ -19,7 +19,18 @@ import {
   CheckCircle2,
   Zap,
   Globe,
+  Mail,
+  ShieldCheck,
+  KeyRound,
+  Lock,
+  HelpCircle,
 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export const Route = createFileRoute("/")({
   beforeLoad: () => {
