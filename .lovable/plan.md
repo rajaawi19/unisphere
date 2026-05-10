@@ -1,126 +1,62 @@
+## Goal
 
-# UniSphere — Inter College Collaboration Platform (Plan)
+Full rewrite of `src/routes/index.tsx` with a fresh, professional-portal layout that looks distinctly different from existing platforms — new structure, new copy angles, new sections, new visual language. No backend or auth changes.
 
-## ⚠️ Important: Tech stack reality
+## Visual direction
 
-Lovable का native stack **TanStack Start + React + Tailwind + Lovable Cloud (Postgres/Auth/Storage/Realtime/Edge Functions)** है. यहाँ हम Node/Express/MongoDB backend host नहीं कर सकते.
+Professional portal aesthetic — think a polished product workspace landing, not a marketing brochure:
 
-आपने MERN चुना है, इसलिए दो रास्ते हैं:
+- Split, console-like hero with a live preview panel on the right
+- Calm neutral surface + a single confident accent (kept from current tokens)
+- Tight grid system, uppercase eyebrows, monospaced metadata labels, subtle dividers
+- Bento-style information density instead of stacked equal sections
+- All colors via existing semantic tokens in `src/styles.css` (no hardcoded colors)
 
-1. **Recommended:** Frontend Lovable में बनाएँ (React + Tailwind — वही जो आप चाहते हैं), backend आप अलग से Render/Railway पर Node+Express+MongoDB deploy करें. हम frontend को `axios` + `socket.io-client` से आपके API से connect कर देंगे. एक `VITE_API_URL` env var से switch होगा.
-2. **Alternative (बाद में decide कर सकते हैं):** Lovable Cloud use करें — same features (auth, DB, realtime, storage, file upload) बिना खुद कुछ host किए मिल जाते हैं.
+## New section order (top → bottom)
 
-यह plan **option 1** के हिसाब से है — हम pure React frontend बनाएँगे जो आपके future MERN API से बात करेगा. अभी API नहीं है तो हम **mock data + localStorage** से full UI flow चलाएँगे, ताकि बाद में सिर्फ `services/` layer में real endpoints plug करने हों.
+1. **Top utility bar** — slim strip with status dot ("Onboarding open · Spring batch"), quick links (Explore, Projects, Hackathons), Sign in / Join.
+2. **Console hero** (split layout)
+  - Left: eyebrow tag, large headline ("The professional portal where students build, before they graduate."), subcopy, primary + secondary CTA, trust row.
+  - Right: a mock "workspace" card — tabs (Feed · Projects · Teammates), a fake teammate match result, a fake project card, a typing chat bubble. Static mock, no logic.
+3. **Live activity ticker** — horizontal auto-scrolling marquee of mock events ("Aarav joined Team Helios", "New project: CampusEats shipped v1", "Hackathon RoundUp registrations open"). Pure CSS keyframes marquee, pauses on hover.
+4. **Smart features bento** — asymmetric 6-tile grid covering smart capabilities:
+  - Smart matchmaking (large tile)
+  - Real-time chat
+  - Project rooms with tasks
+  - Verified college badge
+  - Hackathon hub
+  - Portfolio export
+   Each tile uses an icon, short title, one-line outcome, mini visual (mock chip / progress bar / avatar stack).
+5. **Interactive teammate-finder demo** — visitor picks: Role (Dev / Designer / PM), Skill chips (toggle), Year. Below, three mock student cards re-render based on selection (filter from a local array — no network). Reinforces the "smart matching" promise.
+6. **Project showcase wall** — bento grid of 6 mock student-built projects: cover gradient/illustration, title, stack chips, team avatar stack, "view case" link. Mixed tile sizes for rhythm.
+7. **How it works (4 steps, horizontal rail)** — numbered rail with connecting line, condensed copy. Replaces old vertical "Journey" cards.
+8. **Manifesto / founder note** — long-form typographic block on a contrasting surface: short letter ("Why we built UniSphere"), signed off, with a small avatar group at the end. Distinct typographic treatment vs the rest.
+9. **Built-for marquee** — second marquee of role labels (Developers, Designers, Founders, Researchers, Open-source, Hackathon teams, Product managers, Data folks).
+10. **Testimonials reinvented** — staggered masonry of 5 quotes with varied tile sizes, college tag, and a small "verified student" badge — replaces the old equal 3-card row.
+11. **FAQ — two-column compact** — left column: category nav (Verification, OTP, Privacy, Matching, Pricing, Account). Right column: filtered accordion. All current 8 Q&As preserved. Replaces stacked accordion.
+12. **Final CTA strip** — full-width band, single line headline, two buttons, micro trust line. Distinct from old rounded card.
+13. **Footer** — multi-column (Product, For students, Company, Legal) + brand block. Replaces single centered footer.
 
----
+## Technical details
 
-## Scope (MVP — Phase 1 + 2 combined)
+- Single file rewrite: `src/routes/index.tsx`. No new components, no new routes, no dependencies.
+- Reuse `Logo`, `Button`, `Accordion*`, lucide icons already imported.
+- Keep existing `beforeLoad` redirect to `/feed` when session exists.
+- Marquees: pure CSS via inline `<style>` block or Tailwind arbitrary keyframes (`animate-[marquee_30s_linear_infinite]`) — no library.
+- Interactive teammate finder: local `useState`, mock array of ~8 students, filter client-side.
+- All colors via tokens: `bg-background`, `bg-surface`, `bg-primary`, `text-muted-foreground`, `border`, `text-success`, `text-warning`, `bg-accent`, `bg-primary/10`, etc.
+- Responsive: mobile single-column; bento grids collapse to 1–2 cols under `md`. Hero workspace card hides below `lg` and a simplified preview shows instead.
+- Accessibility: semantic landmarks, single H1, alt text on decorative icons via `aria-hidden`, marquee respects `prefers-reduced-motion` (pause animation).
+- SEO: keep title/meta as-is unless you want copy updates.
 
-आपने सब features माँगे हैं, लेकिन एक turn में सब देना realistic नहीं. MVP में shipping:
+## Out of scope
 
-- Auth UI (signup, login, OTP screen, forgot/reset password)
-- Student Profile (view + edit, skills, college, links, resume placeholder)
-- Connections (suggested, send/accept/reject, my network)
-- Idea/Post Feed (create post, like, comment)
-- Real-time Chat UI (1-to-1 list, conversation view, typing/online indicators — wired to mock socket, ready for real Socket.io)
-- Projects (create, list, detail with members + tasks, join request)
-- Search & Discovery (skills, college, tech)
-- Notifications panel
-- Admin Dashboard (basic — users, posts, reports, analytics cards)
-- Responsive, clean LinkedIn-style UI
+- No edits to auth pages, app shell, mocks, or routes other than `index.tsx`.
+- No new images generated unless you ask — using gradients, icons, and CSS illustrations.
+- No analytics, no real backend hooks.
 
-Phase 2 (अलग turns में): AI matchmaking, AI resume analyzer, video calling, hackathon module, GitHub integration.
+## Deliverable
 
----
+One updated file: `src/routes/index.tsx` with all 13 sections above wired and styled.
 
-## UX & Design
-
-- **Style:** Clean minimal, LinkedIn-inspired — white surfaces, subtle borders, lots of whitespace, single accent color (deep indigo/blue), sans-serif (Inter).
-- **Layout:** Top nav (logo, search, nav icons, profile menu) + left rail on desktop (Home/Network/Projects/Messages/Notifications) + right rail (suggestions/trending) on Home.
-- **Mobile:** Bottom tab bar + collapsible search.
-- **Tokens:** सब colors `src/styles.css` में semantic tokens के रूप में (oklch).
-
----
-
-## Routes (TanStack Start file-based)
-
-```
-src/routes/
-  __root.tsx                  shell + providers
-  index.tsx                   landing / redirect to /feed if logged in
-  login.tsx
-  signup.tsx
-  verify-otp.tsx
-  forgot-password.tsx
-  reset-password.tsx
-  _app.tsx                    authed layout (top nav + rails)
-  _app/feed.tsx               idea feed (home)
-  _app/network.tsx            connections + suggestions
-  _app/profile.$userId.tsx    public profile
-  _app/profile.edit.tsx       edit own profile
-  _app/messages.tsx           chat list + active conversation
-  _app/projects.index.tsx     project discovery
-  _app/projects.new.tsx       create project
-  _app/projects.$projectId.tsx project workspace (tasks, members, chat)
-  _app/notifications.tsx
-  _app/search.tsx
-  _app/admin.tsx              admin dashboard (role-gated UI)
-```
-
-Auth gate: `_app.tsx` reads token from localStorage; if missing → redirect to `/login`.
-
----
-
-## Frontend architecture
-
-```
-src/
-  components/    UI (PostCard, ProfileHeader, ConnectionCard, ChatBubble, TaskItem, …)
-  layouts/       AppShell, AuthShell
-  services/      api.ts (axios instance), auth.ts, users.ts, posts.ts, projects.ts, chat.ts, socket.ts
-  store/         Zustand stores (authStore, chatStore, notificationsStore) — lightweight, swap for Redux Toolkit later if needed
-  hooks/         useAuth, useSocket, useDebounce, …
-  mocks/         seed data + a fake API + fake socket so the app fully works without backend
-  utils/         formatters, validators (zod schemas shared with API)
-  types/         User, Post, Project, Message, Notification
-```
-
-`services/api.ts` reads `import.meta.env.VITE_API_URL`. If unset → routes to `mocks/fakeApi.ts`. This means UI works **today** and switches to real MERN backend by setting one env var later.
-
----
-
-## Data models (mirror your MongoDB collections)
-
-TypeScript types matching your suggested schemas exactly: `User`, `Post`, `Project`, `Message`, `Notification`, `ConnectionRequest`. Seeded with ~20 users across 4 colleges, ~30 posts, ~10 projects so every screen feels alive.
-
----
-
-## Phasing inside this plan
-
-To keep build quality high I will ship in 2 turns:
-
-**Turn A (this implementation):**
-- Design system + AppShell + Auth screens (with mock auth) + Profile (view/edit) + Feed (create/like/comment) + Network (suggestions/requests) + Search + Notifications panel + responsive nav.
-
-**Turn B (next message after A):**
-- Messages (chat UI + mock socket), Projects (list/create/detail with tasks/members/join), Admin dashboard, polish.
-
-After Turn B, backend integration becomes a focused task: replace `mocks/fakeApi.ts` calls with real axios endpoints + connect real Socket.io URL.
-
----
-
-## What you should plan in parallel (outside Lovable)
-
-So you can plug it in later:
-- Express API matching `services/` endpoints (I'll list exact endpoints in code comments).
-- MongoDB Atlas + Mongoose models exactly matching the TS types we define.
-- Socket.io server emitting events: `message:new`, `typing`, `presence`, `notification:new`.
-- Deploy API to Render, set `VITE_API_URL` in Lovable project.
-
----
-
-## Out of scope for MVP (will do later on request)
-
-AI features, video calling, GitHub integration, Cloudinary uploads (we'll use local preview URLs for now), real OTP email sending, hackathon hosting.
-
-Confirm and I'll start with **Turn A**.
+Remainder : Not to do any changes in langing page . Do all changes in Home page (after login page) 
