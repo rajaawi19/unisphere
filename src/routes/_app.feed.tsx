@@ -298,7 +298,7 @@ function FeedPage() {
                   t.accent === "success" && "bg-success/15 text-success",
                 )}
               >
-                <t.icon className="h-4.5 w-4.5" />
+                <t.icon className="h-4 w-4" />
               </div>
               <div className="mt-3 text-sm font-semibold">{t.title}</div>
               <div className="mt-0.5 text-xs text-muted-foreground">{t.desc}</div>
