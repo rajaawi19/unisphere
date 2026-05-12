@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -28,6 +28,7 @@ import {
   Star,
   PenSquare,
   Filter,
+  X,
 } from "lucide-react";
 import { PostCard } from "@/components/PostCard";
 import { UserCard } from "@/components/UserCard";
@@ -115,6 +116,8 @@ function FeedPage() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [content, setContent] = useState("");
   const [tagsInput, setTagsInput] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [posting, setPosting] = useState(false);
   const [feedFilter, setFeedFilter] = useState<"latest" | "trending" | "mine">("latest");
   const [roleFilter, setRoleFilter] = useState<(typeof ROLE_FILTERS)[number]>("All");
@@ -135,14 +138,32 @@ function FeedPage() {
         .split(/[,\s]+/)
         .map((t) => t.replace(/^#/, "").trim())
         .filter(Boolean);
-      const post = await api.createPost({ content: content.trim(), tags });
+      const post = await api.createPost({ content: content.trim(), tags, imageUrl });
       setPosts((prev) => [post, ...prev]);
       setContent("");
       setTagsInput("");
+      setImageUrl(undefined);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       toast.success("Posted to your network");
     } finally {
       setPosting(false);
     }
+  }
+
+  function handleImagePick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setImageUrl(reader.result as string);
+    reader.readAsDataURL(file);
   }
 
   function patchPost(updated: Post) {
@@ -345,6 +366,26 @@ function FeedPage() {
                   placeholder="Share a build log, a question, or what you shipped today…"
                   className="min-h-[88px] resize-none border-transparent bg-background/60 focus-visible:bg-background"
                 />
+                {imageUrl && (
+                  <div className="relative inline-block max-w-full overflow-hidden rounded-lg border bg-background">
+                    <img
+                      src={imageUrl}
+                      alt="Attachment preview"
+                      className="max-h-72 w-auto object-contain"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setImageUrl(undefined);
+                        if (fileInputRef.current) fileInputRef.current.value = "";
+                      }}
+                      className="absolute right-2 top-2 rounded-full bg-background/90 p-1 text-foreground shadow hover:bg-background"
+                      aria-label="Remove image"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
                 <div className="flex flex-wrap items-center gap-2">
                   <div className="relative min-w-[180px] flex-1">
                     <Hash className="absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
@@ -355,8 +396,19 @@ function FeedPage() {
                       className="pl-7 text-xs"
                     />
                   </div>
-                  <Button variant="ghost" size="sm" disabled title="Coming soon">
-                    <ImageIcon className="mr-1 h-4 w-4" /> Image
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImagePick}
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <ImageIcon className="mr-1 h-4 w-4" /> {imageUrl ? "Change" : "Image"}
                   </Button>
                   <Button onClick={publish} disabled={posting || !content.trim()}>
                     {posting ? "Posting…" : "Publish"}
