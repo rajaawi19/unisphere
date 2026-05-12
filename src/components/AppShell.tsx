@@ -38,10 +38,18 @@ const navItems = [
 
 export function AppShell() {
   const navigate = useNavigate();
+  const router = useRouter();
   const { user, logout } = useAuthStore();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [unread, setUnread] = useState(0);
   const [q, setQ] = useState("");
+
+  function goBack() {
+    router.history.back();
+  }
+  function goForward() {
+    router.history.forward();
+  }
 
   useEffect(() => {
     let alive = true;
