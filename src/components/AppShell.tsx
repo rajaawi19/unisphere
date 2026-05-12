@@ -77,6 +77,24 @@ export function AppShell() {
       <header className="sticky top-0 z-40 border-b bg-surface/95 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4">
           <Logo />
+          <div className="hidden items-center gap-1 md:flex">
+            <button
+              type="button"
+              onClick={goBack}
+              aria-label="Go back"
+              className="grid h-8 w-8 place-items-center rounded-full border bg-surface text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={goForward}
+              aria-label="Go forward"
+              className="grid h-8 w-8 place-items-center rounded-full border bg-surface text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
           <form onSubmit={submitSearch} className="ml-2 hidden flex-1 max-w-md md:block">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
