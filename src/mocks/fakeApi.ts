@@ -9,6 +9,7 @@ import {
   seedNotifications,
   DEFAULT_DEMO_USER_ID,
 } from "./seed";
+import { emitRealtime } from "@/lib/realtime";
 import type {
   User,
   Post,
