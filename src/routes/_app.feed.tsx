@@ -137,14 +137,32 @@ function FeedPage() {
         .split(/[,\s]+/)
         .map((t) => t.replace(/^#/, "").trim())
         .filter(Boolean);
-      const post = await api.createPost({ content: content.trim(), tags });
+      const post = await api.createPost({ content: content.trim(), tags, imageUrl });
       setPosts((prev) => [post, ...prev]);
       setContent("");
       setTagsInput("");
+      setImageUrl(undefined);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       toast.success("Posted to your network");
     } finally {
       setPosting(false);
     }
+  }
+
+  function handleImagePick(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => setImageUrl(reader.result as string);
+    reader.readAsDataURL(file);
   }
 
   function patchPost(updated: Post) {
