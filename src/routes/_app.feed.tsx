@@ -130,6 +130,27 @@ function FeedPage() {
     });
   }, []);
 
+  // Live feed updates via BroadcastChannel (cross-tab) + same-tab events.
+  useEffect(() => {
+    const off = onRealtime((evt) => {
+      if (evt.type === "post:new") {
+        setPosts((prev) =>
+          prev.some((p) => p.id === evt.post.id) ? prev : [evt.post, ...prev],
+        );
+        if (evt.actorId !== me.id) {
+          toast("New post in your feed", { description: "Just now" });
+        }
+      } else if (
+        evt.type === "post:like" ||
+        evt.type === "post:comment" ||
+        evt.type === "post:update"
+      ) {
+        setPosts((prev) => prev.map((p) => (p.id === evt.post.id ? evt.post : p)));
+      }
+    });
+    return off;
+  }, [me.id]);
+
   async function publish() {
     if (!content.trim()) return;
     setPosting(true);
