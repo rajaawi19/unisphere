@@ -10,6 +10,7 @@ import { Card } from "@/components/ui/card";
 import { api } from "@/services/api";
 import type { Post, User } from "@/types";
 import { useAuthStore } from "@/store/authStore";
+import { onRealtime } from "@/lib/realtime";
 
 export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) => void }) {
   const me = useAuthStore((s) => s.user);
@@ -33,6 +34,18 @@ export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) 
       });
     });
   }, [showComments, post.comments, commentAuthors]);
+
+  // Live updates for this post (likes/comments) from other tabs/users.
+  useEffect(() => {
+    return onRealtime((evt) => {
+      if (
+        (evt.type === "post:like" || evt.type === "post:comment" || evt.type === "post:update") &&
+        evt.post.id === post.id
+      ) {
+        onChange?.(evt.post);
+      }
+    });
+  }, [post.id, onChange]);
 
   const liked = me ? post.likes.includes(me.id) : false;
 

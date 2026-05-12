@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useNavigate, useRouter, useRouterState } from "@tanstack/react-router";
 import {
   Home,
   Users,
@@ -10,6 +10,8 @@ import {
   Shield,
   LogOut,
   User as UserIcon,
+  ArrowLeft,
+  ArrowRight,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Input } from "@/components/ui/input";
@@ -36,10 +38,18 @@ const navItems = [
 
 export function AppShell() {
   const navigate = useNavigate();
+  const router = useRouter();
   const { user, logout } = useAuthStore();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [unread, setUnread] = useState(0);
   const [q, setQ] = useState("");
+
+  function goBack() {
+    router.history.back();
+  }
+  function goForward() {
+    router.history.forward();
+  }
 
   useEffect(() => {
     let alive = true;
@@ -67,6 +77,24 @@ export function AppShell() {
       <header className="sticky top-0 z-40 border-b bg-surface/95 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4">
           <Logo />
+          <div className="hidden items-center gap-1 md:flex">
+            <button
+              type="button"
+              onClick={goBack}
+              aria-label="Go back"
+              className="grid h-8 w-8 place-items-center rounded-full border bg-surface text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={goForward}
+              aria-label="Go forward"
+              className="grid h-8 w-8 place-items-center rounded-full border bg-surface text-muted-foreground transition hover:bg-muted hover:text-foreground"
+            >
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
           <form onSubmit={submitSearch} className="ml-2 hidden flex-1 max-w-md md:block">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -185,6 +213,26 @@ export function AppShell() {
           })}
         </div>
       </nav>
+
+      {/* Floating back/forward pill (mobile) */}
+      <div className="fixed bottom-20 right-4 z-40 flex items-center gap-1 rounded-full border bg-surface/95 p-1 shadow-lg backdrop-blur md:hidden">
+        <button
+          type="button"
+          onClick={goBack}
+          aria-label="Go back"
+          className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={goForward}
+          aria-label="Go forward"
+          className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
+        >
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 }

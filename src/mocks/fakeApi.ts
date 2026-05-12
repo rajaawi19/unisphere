@@ -9,6 +9,7 @@ import {
   seedNotifications,
   DEFAULT_DEMO_USER_ID,
 } from "./seed";
+import { emitRealtime } from "@/lib/realtime";
 import type {
   User,
   Post,
@@ -343,6 +344,7 @@ export const fakeApi = {
     };
     db.posts.unshift(post);
     save(db);
+    emitRealtime({ type: "post:new", post, actorId: s.userId });
     return post;
   },
 
@@ -372,6 +374,7 @@ export const fakeApi = {
       post.likes.splice(i, 1);
     }
     save(db);
+    emitRealtime({ type: "post:like", post, actorId: s.userId });
     return post;
   },
 
@@ -385,6 +388,7 @@ export const fakeApi = {
     const c: Comment = { id: "cm" + id(), userId: s.userId, content, createdAt: new Date().toISOString() };
     post.comments.push(c);
     save(db);
+    emitRealtime({ type: "post:comment", post, actorId: s.userId });
     return c;
   },
 
