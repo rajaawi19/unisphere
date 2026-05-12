@@ -35,6 +35,18 @@ export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) 
     });
   }, [showComments, post.comments, commentAuthors]);
 
+  // Live updates for this post (likes/comments) from other tabs/users.
+  useEffect(() => {
+    return onRealtime((evt) => {
+      if (
+        (evt.type === "post:like" || evt.type === "post:comment" || evt.type === "post:update") &&
+        evt.post.id === post.id
+      ) {
+        onChange?.(evt.post);
+      }
+    });
+  }, [post.id, onChange]);
+
   const liked = me ? post.likes.includes(me.id) : false;
 
   async function toggleLike() {
