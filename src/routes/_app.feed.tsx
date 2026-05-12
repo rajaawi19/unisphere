@@ -28,6 +28,7 @@ import {
   Star,
   PenSquare,
   Filter,
+  X,
 } from "lucide-react";
 import { PostCard } from "@/components/PostCard";
 import { UserCard } from "@/components/UserCard";
