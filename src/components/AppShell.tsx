@@ -213,6 +213,26 @@ export function AppShell() {
           })}
         </div>
       </nav>
+
+      {/* Floating back/forward pill (mobile) */}
+      <div className="fixed bottom-20 right-4 z-40 flex items-center gap-1 rounded-full border bg-surface/95 p-1 shadow-lg backdrop-blur md:hidden">
+        <button
+          type="button"
+          onClick={goBack}
+          aria-label="Go back"
+          className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          onClick={goForward}
+          aria-label="Go forward"
+          className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
+        >
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
     </div>
   );
 }
