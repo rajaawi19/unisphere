@@ -115,6 +115,8 @@ function FeedPage() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [content, setContent] = useState("");
   const [tagsInput, setTagsInput] = useState("");
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [posting, setPosting] = useState(false);
   const [feedFilter, setFeedFilter] = useState<"latest" | "trending" | "mine">("latest");
   const [roleFilter, setRoleFilter] = useState<(typeof ROLE_FILTERS)[number]>("All");
