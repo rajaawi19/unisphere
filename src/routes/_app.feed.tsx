@@ -37,6 +37,7 @@ import { useAuthStore } from "@/store/authStore";
 import type { Post, User } from "@/types";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { onRealtime } from "@/lib/realtime";
 
 export const Route = createFileRoute("/_app/feed")({
   component: FeedPage,
