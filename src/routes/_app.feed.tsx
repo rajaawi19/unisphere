@@ -126,12 +126,81 @@ function FeedPage() {
   const [feedFilter, setFeedFilter] = useState<"latest" | "trending" | "mine">("latest");
   const [roleFilter, setRoleFilter] = useState<(typeof ROLE_FILTERS)[number]>("All");
 
+  // Pagination state
+  const PAGE_SIZE = 5;
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [pageError, setPageError] = useState<string | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  // Refs to keep latest values inside the IO callback without re-binding it.
+  const loadingMoreRef = useRef(false);
+  const hasMoreRef = useRef(true);
+  const cursorRef = useRef<string | null>(null);
+  const errorRef = useRef<string | null>(null);
+  loadingMoreRef.current = loadingMore;
+  hasMoreRef.current = hasMore;
+  cursorRef.current = cursor;
+  errorRef.current = pageError;
+
+  const loadPage = async (reset = false) => {
+    const nextCursor = reset ? null : cursorRef.current;
+    if (reset) {
+      setInitialLoading(true);
+    } else {
+      setLoadingMore(true);
+    }
+    setPageError(null);
+    try {
+      const { items, nextCursor: nc } = await api.listFeedPage({
+        cursor: nextCursor,
+        limit: PAGE_SIZE,
+      });
+      setPosts((prev) => {
+        if (reset) return items;
+        const seen = new Set(prev.map((p) => p.id));
+        return [...prev, ...items.filter((p) => !seen.has(p.id))];
+      });
+      setCursor(nc);
+      setHasMore(nc !== null);
+    } catch (err) {
+      setPageError((err as Error).message ?? "Something went wrong loading posts.");
+    } finally {
+      setInitialLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
   useEffect(() => {
-    api.listFeed().then(setPosts);
+    loadPage(true);
     api.listSuggestions(8).then((users) => {
       setAllUsers(users);
       setSuggestions(users.slice(0, 4));
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // IntersectionObserver — auto-load next page as the sentinel scrolls into view.
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0]?.isIntersecting &&
+          hasMoreRef.current &&
+          !loadingMoreRef.current &&
+          !errorRef.current
+        ) {
+          loadPage(false);
+        }
+      },
+      { rootMargin: "400px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Live feed updates via BroadcastChannel (cross-tab) + same-tab events.
