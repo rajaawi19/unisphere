@@ -173,13 +173,28 @@ function FeedPage() {
   };
 
   useEffect(() => {
-    loadPage(true);
     api.listSuggestions(8).then((users) => {
       setAllUsers(users);
       setSuggestions(users.slice(0, 4));
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Reset pagination state whenever the feed filter changes, then refetch
+  // from the start. Without this, switching filters leaves the old cursor /
+  // hasMore / loading flags in place and infinite scroll silently breaks.
+  useEffect(() => {
+    setPosts([]);
+    setCursor(null);
+    cursorRef.current = null;
+    setHasMore(true);
+    hasMoreRef.current = true;
+    setLoadingMore(false);
+    loadingMoreRef.current = false;
+    setPageError(null);
+    errorRef.current = null;
+    loadPage(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [feedFilter]);
 
   // IntersectionObserver — auto-load next page as the sentinel scrolls into view.
   useEffect(() => {
