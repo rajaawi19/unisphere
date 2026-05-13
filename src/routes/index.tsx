@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
+import { NavArrows } from "@/components/NavArrows";
 import { getSession } from "@/mocks/fakeApi";
 import {
   Users,
