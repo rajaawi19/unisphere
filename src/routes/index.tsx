@@ -109,7 +109,9 @@ function Landing() {
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
           <div className="flex items-center gap-3">
             <Logo />
-            <NavArrows className="hidden sm:flex" variant="ghost" />
+            <div className="hidden sm:block">
+              <NavArrows variant="ghost" />
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Button asChild variant="ghost" size="sm">
