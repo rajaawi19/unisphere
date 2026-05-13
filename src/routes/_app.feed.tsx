@@ -541,13 +541,87 @@ function FeedPage() {
             {visiblePosts.map((p) => (
               <PostCard key={p.id} post={p} onChange={patchPost} />
             ))}
-            {visiblePosts.length === 0 && (
+
+            {/* Initial loading skeletons */}
+            {initialLoading && posts.length === 0 && (
+              <div className="space-y-4" aria-hidden>
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Card key={i} className="border bg-surface p-4">
+                    <div className="flex gap-3">
+                      <div className="h-10 w-10 shrink-0 animate-pulse rounded-full bg-muted" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-3 w-1/3 animate-pulse rounded bg-muted" />
+                        <div className="h-3 w-2/3 animate-pulse rounded bg-muted" />
+                        <div className="h-24 w-full animate-pulse rounded bg-muted" />
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+
+            {/* Empty state (only when not loading) */}
+            {!initialLoading && visiblePosts.length === 0 && !pageError && (
               <Card className="border border-dashed bg-surface p-8 text-center">
                 <Lightbulb className="mx-auto h-6 w-6 text-muted-foreground" />
                 <p className="mt-2 text-sm text-muted-foreground">
                   Nothing here yet. Try another filter or be the first to post.
                 </p>
               </Card>
+            )}
+
+            {/* Sentinel for IntersectionObserver — only watched when filter is "latest" */}
+            {feedFilter === "latest" && hasMore && !pageError && (
+              <div ref={sentinelRef} className="h-1 w-full" aria-hidden />
+            )}
+
+            {/* Loading more indicator */}
+            {loadingMore && (
+              <div className="flex items-center justify-center gap-2 py-4 text-xs text-muted-foreground">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Loading more posts…
+              </div>
+            )}
+
+            {/* Error state with retry */}
+            {pageError && (
+              <Card className="border border-destructive/30 bg-destructive/5 p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold text-destructive">
+                      Failed to load posts
+                    </div>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{pageError}</p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => loadPage(posts.length === 0)}
+                  >
+                    Retry
+                  </Button>
+                </div>
+              </Card>
+            )}
+
+            {/* Manual "Load more" fallback for users on filtered views or
+                when the observer can't fire (e.g. when the user is paused
+                here and the page hasn't grown). */}
+            {!loadingMore && !pageError && hasMore && posts.length > 0 && (
+              <div className="flex justify-center pt-1">
+                <Button variant="ghost" size="sm" onClick={() => loadPage(false)}>
+                  Load more posts
+                </Button>
+              </div>
+            )}
+
+            {/* End of feed marker */}
+            {!hasMore && posts.length > 0 && !pageError && (
+              <div className="flex items-center justify-center gap-1.5 py-4 text-[11px] font-mono uppercase tracking-wider text-muted-foreground">
+                <CheckCheck className="h-3.5 w-3.5 text-success" />
+                You're all caught up
+              </div>
             )}
           </div>
 
