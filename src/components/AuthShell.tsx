@@ -1,6 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
-import { Network, Rocket, Users, Sparkles, Quote, ShieldCheck } from "lucide-react";
+import { NavArrows } from "@/components/NavArrows";
+import { Button } from "@/components/ui/button";
+import { Network, Rocket, Users, Sparkles, Quote, ShieldCheck, Home } from "lucide-react";
 
 const highlights = [
   { icon: Network, title: "Cross-college network", desc: "Connect beyond your campus walls." },
@@ -141,7 +144,18 @@ export function AuthShell({
         </div>
 
         {/* Right form panel */}
-        <div className="flex flex-col justify-center px-6 py-12 sm:px-12">
+        <div className="relative flex flex-col justify-center px-6 py-12 sm:px-12">
+          {/* Top-right navigation: home + back/forward */}
+          <div className="absolute right-4 top-4 z-10 flex items-center gap-2 sm:right-6 sm:top-6">
+            <Button asChild variant="ghost" size="sm" className="gap-1.5 text-xs">
+              <Link to="/">
+                <Home className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Home</span>
+              </Link>
+            </Button>
+            <NavArrows variant="ghost" />
+          </div>
+
           <div className="mx-auto w-full max-w-md">
             <div className="lg:hidden">
               <Logo />

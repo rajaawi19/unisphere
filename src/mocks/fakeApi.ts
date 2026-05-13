@@ -327,6 +327,23 @@ export const fakeApi = {
     return [...load().posts].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
   },
 
+  // Paginated feed with cursor (post id of the last item from previous page).
+  // Returns up to `limit` items + nextCursor (null when end reached).
+  async listFeedPage(input: { cursor?: string | null; limit?: number } = {}) {
+    const { cursor = null, limit = 5 } = input;
+    await wait(350);
+    // Tiny simulated network flake so the UI's error/retry path is reachable.
+    if (Math.random() < 0.04) throw new Error("Couldn't reach the server. Please try again.");
+    const all = [...load().posts].sort(
+      (a, b) => +new Date(b.createdAt) - +new Date(a.createdAt),
+    );
+    const startIdx = cursor ? all.findIndex((p) => p.id === cursor) + 1 : 0;
+    const slice = all.slice(startIdx, startIdx + limit);
+    const nextCursor =
+      startIdx + limit < all.length && slice.length > 0 ? slice[slice.length - 1].id : null;
+    return { items: slice, nextCursor, total: all.length };
+  },
+
   async createPost(input: { content: string; tags: string[]; imageUrl?: string }) {
     await wait();
     const s = getSession();

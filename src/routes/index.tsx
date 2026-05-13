@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
+import { NavArrows } from "@/components/NavArrows";
 import { getSession } from "@/mocks/fakeApi";
 import {
   Users,
@@ -105,8 +106,13 @@ function Landing() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b bg-surface/90 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-          <Logo />
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4">
+          <div className="flex items-center gap-3">
+            <Logo />
+            <div className="hidden sm:block">
+              <NavArrows variant="ghost" />
+            </div>
+          </div>
           <div className="flex items-center gap-2">
             <Button asChild variant="ghost" size="sm">
               <Link to="/login">Sign in</Link>
