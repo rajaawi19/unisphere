@@ -1,6 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
-import { Network, Rocket, Users, Sparkles, Quote, ShieldCheck } from "lucide-react";
+import { NavArrows } from "@/components/NavArrows";
+import { Button } from "@/components/ui/button";
+import { Network, Rocket, Users, Sparkles, Quote, ShieldCheck, Home } from "lucide-react";
 
 const highlights = [
   { icon: Network, title: "Cross-college network", desc: "Connect beyond your campus walls." },
