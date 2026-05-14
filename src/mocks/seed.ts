@@ -194,6 +194,7 @@ export const seedPosts: Post[] = [
     tags: ["IoT", "Frontend", "Collab"],
     likes: ["u1", "u2"],
     comments: [],
+    projectId: "pr2",
     createdAt: "2025-05-05T15:20:00Z",
   },
   {
