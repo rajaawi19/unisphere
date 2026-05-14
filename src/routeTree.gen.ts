@@ -20,6 +20,7 @@ import { Route as AppSearchRouteImport } from './routes/_app.search'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppNetworkRouteImport } from './routes/_app.network'
 import { Route as AppFeedRouteImport } from './routes/_app.feed'
+import { Route as AppProjectsProjectIdRouteImport } from './routes/_app.projects.$projectId'
 import { Route as AppProfileEditRouteImport } from './routes/_app.profile.edit'
 import { Route as AppProfileUserIdRouteImport } from './routes/_app.profile.$userId'
 
@@ -77,6 +78,11 @@ const AppFeedRoute = AppFeedRouteImport.update({
   path: '/feed',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProjectsProjectIdRoute = AppProjectsProjectIdRouteImport.update({
+  id: '/projects/$projectId',
+  path: '/projects/$projectId',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppProfileEditRoute = AppProfileEditRouteImport.update({
   id: '/profile/edit',
   path: '/profile/edit',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof AppSearchRoute
   '/profile/$userId': typeof AppProfileUserIdRoute
   '/profile/edit': typeof AppProfileEditRoute
+  '/projects/$projectId': typeof AppProjectsProjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/search': typeof AppSearchRoute
   '/profile/$userId': typeof AppProfileUserIdRoute
   '/profile/edit': typeof AppProfileEditRoute
+  '/projects/$projectId': typeof AppProjectsProjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/_app/search': typeof AppSearchRoute
   '/_app/profile/$userId': typeof AppProfileUserIdRoute
   '/_app/profile/edit': typeof AppProfileEditRoute
+  '/_app/projects/$projectId': typeof AppProjectsProjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/profile/$userId'
     | '/profile/edit'
+    | '/projects/$projectId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/profile/$userId'
     | '/profile/edit'
+    | '/projects/$projectId'
   id:
     | '__root__'
     | '/'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/_app/search'
     | '/_app/profile/$userId'
     | '/_app/profile/edit'
+    | '/_app/projects/$projectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -267,6 +279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFeedRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/projects/$projectId': {
+      id: '/_app/projects/$projectId'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof AppProjectsProjectIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/profile/edit': {
       id: '/_app/profile/edit'
       path: '/profile/edit'
@@ -291,6 +310,7 @@ interface AppRouteChildren {
   AppSearchRoute: typeof AppSearchRoute
   AppProfileUserIdRoute: typeof AppProfileUserIdRoute
   AppProfileEditRoute: typeof AppProfileEditRoute
+  AppProjectsProjectIdRoute: typeof AppProjectsProjectIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -300,6 +320,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSearchRoute: AppSearchRoute,
   AppProfileUserIdRoute: AppProfileUserIdRoute,
   AppProfileEditRoute: AppProfileEditRoute,
+  AppProjectsProjectIdRoute: AppProjectsProjectIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -316,3 +337,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
