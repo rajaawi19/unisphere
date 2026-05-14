@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, MessageCircle, Share2, MoreHorizontal, Briefcase, Plus } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { api } from "@/services/api";
-import type { Post, User } from "@/types";
+import type { Post, Project, User } from "@/types";
 import { useAuthStore } from "@/store/authStore";
 import { onRealtime } from "@/lib/realtime";
+import { toast } from "sonner";
 
 export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) => void }) {
   const me = useAuthStore((s) => s.user);
