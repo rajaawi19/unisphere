@@ -344,7 +344,7 @@ export const fakeApi = {
     return { items: slice, nextCursor, total: all.length };
   },
 
-  async createPost(input: { content: string; tags: string[]; imageUrl?: string }) {
+  async createPost(input: { content: string; tags: string[]; imageUrl?: string; projectId?: string }) {
     await wait();
     const s = getSession();
     if (!s) throw new Error("Not logged in");
@@ -355,6 +355,7 @@ export const fakeApi = {
       content: input.content,
       tags: input.tags,
       imageUrl: input.imageUrl,
+      projectId: input.projectId,
       likes: [],
       comments: [],
       createdAt: new Date().toISOString(),
@@ -363,6 +364,54 @@ export const fakeApi = {
     save(db);
     emitRealtime({ type: "post:new", post, actorId: s.userId });
     return post;
+  },
+
+  async attachPostToProject(postId: string, projectId: string | null) {
+    await wait(40);
+    const s = getSession();
+    if (!s) throw new Error("Not logged in");
+    const db = load();
+    const post = db.posts.find((p) => p.id === postId);
+    if (!post) throw new Error("Post not found");
+    if (post.userId !== s.userId) throw new Error("Only the author can link a project");
+    post.projectId = projectId ?? undefined;
+    save(db);
+    emitRealtime({ type: "post:update", post, actorId: s.userId });
+    return post;
+  },
+
+  async createProjectFromPost(postId: string, input: { title: string; description: string; techStack: string[] }) {
+    await wait();
+    const s = getSession();
+    if (!s) throw new Error("Not logged in");
+    const db = load();
+    const post = db.posts.find((p) => p.id === postId);
+    if (!post) throw new Error("Post not found");
+    if (post.userId !== s.userId) throw new Error("Only the author can create a project room");
+    const project: Project = {
+      id: "pr" + id(),
+      title: input.title,
+      description: input.description,
+      techStack: input.techStack,
+      ownerId: s.userId,
+      memberIds: [s.userId],
+      joinRequestIds: [],
+      status: "open",
+      tasks: [],
+      createdAt: new Date().toISOString(),
+    };
+    db.projects.unshift(project);
+    post.projectId = project.id;
+    save(db);
+    emitRealtime({ type: "post:update", post, actorId: s.userId });
+    return { project, post };
+  },
+
+  async listMyProjects() {
+    await wait(40);
+    const s = getSession();
+    if (!s) return [] as Project[];
+    return load().projects.filter((p) => p.memberIds.includes(s.userId) || p.ownerId === s.userId);
   },
 
   async toggleLike(postId: string) {

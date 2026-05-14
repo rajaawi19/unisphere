@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, MessageCircle, Share2, MoreHorizontal, Briefcase, Plus } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { api } from "@/services/api";
-import type { Post, User } from "@/types";
+import type { Post, Project, User } from "@/types";
 import { useAuthStore } from "@/store/authStore";
 import { onRealtime } from "@/lib/realtime";
+import { toast } from "sonner";
 
 export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) => void }) {
   const me = useAuthStore((s) => s.user);
@@ -18,6 +19,35 @@ export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) 
   const [showComments, setShowComments] = useState(false);
   const [draft, setDraft] = useState("");
   const [commentAuthors, setCommentAuthors] = useState<Record<string, User>>({});
+  const [linkedProject, setLinkedProject] = useState<Project | null>(null);
+  const [creatingRoom, setCreatingRoom] = useState(false);
+
+  useEffect(() => {
+    if (!post.projectId) {
+      setLinkedProject(null);
+      return;
+    }
+    api.getProject(post.projectId).then((p) => setLinkedProject(p));
+  }, [post.projectId]);
+
+  async function createProjectRoom() {
+    if (!me || me.id !== post.userId) return;
+    setCreatingRoom(true);
+    try {
+      const title = post.content.split("\n")[0].slice(0, 60) || "Untitled project";
+      const { post: updated } = await api.createProjectFromPost(post.id, {
+        title,
+        description: post.content.slice(0, 280),
+        techStack: post.tags,
+      });
+      onChange?.(updated);
+      toast.success("Project room created");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setCreatingRoom(false);
+    }
+  }
 
   useEffect(() => {
     api.getUser(post.userId).then((u) => u && setAuthor(u));
@@ -110,6 +140,42 @@ export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) 
 
       {post.imageUrl && (
         <img src={post.imageUrl} alt="" className="mt-3 w-full max-h-[420px] object-cover" />
+      )}
+
+      {(post.projectId || me?.id === post.userId) && (
+        <div className="mx-4 mt-3 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2">
+          {post.projectId ? (
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <Briefcase className="h-4 w-4 shrink-0 text-primary" />
+                <div className="min-w-0">
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-primary">
+                    Project room
+                  </div>
+                  <div className="truncate text-sm font-medium">
+                    {linkedProject?.title ?? "Linked project"}
+                  </div>
+                </div>
+              </div>
+              <Button asChild size="sm" variant="outline">
+                <Link to="/projects/$projectId" params={{ projectId: post.projectId }}>
+                  Open
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Briefcase className="h-4 w-4 text-primary" />
+                Spin up a collaboration room from this post.
+              </div>
+              <Button size="sm" variant="outline" onClick={createProjectRoom} disabled={creatingRoom}>
+                <Plus className="mr-1 h-3.5 w-3.5" />
+                {creatingRoom ? "Creating…" : "Create project room"}
+              </Button>
+            </div>
+          )}
+        </div>
       )}
 
       <div className="mt-3 flex items-center justify-between border-t px-2 py-1 text-sm">

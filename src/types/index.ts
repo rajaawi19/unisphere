@@ -43,6 +43,7 @@ export type Post = {
   tags: string[];
   likes: string[]; // user ids
   comments: Comment[];
+  projectId?: string; // optional linked project room
   createdAt: string;
 };
 
