@@ -142,6 +142,42 @@ export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) 
         <img src={post.imageUrl} alt="" className="mt-3 w-full max-h-[420px] object-cover" />
       )}
 
+      {(post.projectId || me?.id === post.userId) && (
+        <div className="mx-4 mt-3 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2">
+          {post.projectId ? (
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <Briefcase className="h-4 w-4 shrink-0 text-primary" />
+                <div className="min-w-0">
+                  <div className="text-[10px] font-mono uppercase tracking-wider text-primary">
+                    Project room
+                  </div>
+                  <div className="truncate text-sm font-medium">
+                    {linkedProject?.title ?? "Linked project"}
+                  </div>
+                </div>
+              </div>
+              <Button asChild size="sm" variant="outline">
+                <Link to="/projects/$projectId" params={{ projectId: post.projectId }}>
+                  Open
+                </Link>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Briefcase className="h-4 w-4 text-primary" />
+                Spin up a collaboration room from this post.
+              </div>
+              <Button size="sm" variant="outline" onClick={createProjectRoom} disabled={creatingRoom}>
+                <Plus className="mr-1 h-3.5 w-3.5" />
+                {creatingRoom ? "Creating…" : "Create project room"}
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className="mt-3 flex items-center justify-between border-t px-2 py-1 text-sm">
         <Button variant="ghost" size="sm" onClick={toggleLike} className={liked ? "text-primary" : ""}>
           <Heart className={`mr-2 h-4 w-4 ${liked ? "fill-current" : ""}`} /> {post.likes.length} Like
