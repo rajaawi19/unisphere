@@ -19,6 +19,35 @@ export function PostCard({ post, onChange }: { post: Post; onChange?: (p: Post) 
   const [showComments, setShowComments] = useState(false);
   const [draft, setDraft] = useState("");
   const [commentAuthors, setCommentAuthors] = useState<Record<string, User>>({});
+  const [linkedProject, setLinkedProject] = useState<Project | null>(null);
+  const [creatingRoom, setCreatingRoom] = useState(false);
+
+  useEffect(() => {
+    if (!post.projectId) {
+      setLinkedProject(null);
+      return;
+    }
+    api.getProject(post.projectId).then((p) => setLinkedProject(p));
+  }, [post.projectId]);
+
+  async function createProjectRoom() {
+    if (!me || me.id !== post.userId) return;
+    setCreatingRoom(true);
+    try {
+      const title = post.content.split("\n")[0].slice(0, 60) || "Untitled project";
+      const { post: updated } = await api.createProjectFromPost(post.id, {
+        title,
+        description: post.content.slice(0, 280),
+        techStack: post.tags,
+      });
+      onChange?.(updated);
+      toast.success("Project room created");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setCreatingRoom(false);
+    }
+  }
 
   useEffect(() => {
     api.getUser(post.userId).then((u) => u && setAuthor(u));
