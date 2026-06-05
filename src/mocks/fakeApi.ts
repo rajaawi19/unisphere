@@ -73,6 +73,50 @@ function save(db: DB) {
   localStorage.setItem(KEY, JSON.stringify(db));
 }
 
+// --- messaging store (separate key so existing data stays intact)
+const MSG_KEY = "unisphere:messages:v1";
+type MessagesDB = {
+  conversations: import("@/types").Conversation[];
+  messages: import("@/types").Message[];
+};
+function seedMessagesDB(): MessagesDB {
+  const now = Date.now();
+  const iso = (offsetMin: number) => new Date(now - offsetMin * 60_000).toISOString();
+  return {
+    conversations: [
+      { id: "cv1", participantIds: ["u1", "u2"], lastMessageAt: iso(4) },
+      { id: "cv2", participantIds: ["u1", "u6"], lastMessageAt: iso(120) },
+      { id: "cv3", participantIds: ["u1", "u4"], lastMessageAt: iso(60 * 26) },
+    ],
+    messages: [
+      { id: "m1", conversationId: "cv1", senderId: "u2", content: "Hey! Saw your post on the AI Study Buddy — love the idea.", createdAt: iso(45), seen: true },
+      { id: "m2", conversationId: "cv1", senderId: "u1", content: "Thanks 🙌 we need a frontend dev, want to jump in?", createdAt: iso(40), seen: true },
+      { id: "m3", conversationId: "cv1", senderId: "u2", content: "Yes! Send me the repo link.", createdAt: iso(4), seen: false },
+      { id: "m4", conversationId: "cv2", senderId: "u6", content: "Ready for the hackathon kickoff tonight?", createdAt: iso(125), seen: true },
+      { id: "m5", conversationId: "cv2", senderId: "u1", content: "100%. I'll bring the Figma board.", createdAt: iso(120), seen: true },
+      { id: "m6", conversationId: "cv3", senderId: "u4", content: "Hey Aman, can we sync on the research paper draft tomorrow?", createdAt: iso(60 * 26), seen: true },
+    ],
+  };
+}
+function loadMessages(): MessagesDB {
+  if (!isBrowser()) return seedMessagesDB();
+  const raw = localStorage.getItem(MSG_KEY);
+  if (raw) {
+    try {
+      return JSON.parse(raw) as MessagesDB;
+    } catch {
+      // reseed
+    }
+  }
+  const fresh = seedMessagesDB();
+  localStorage.setItem(MSG_KEY, JSON.stringify(fresh));
+  return fresh;
+}
+function saveMessages(db: MessagesDB) {
+  if (!isBrowser()) return;
+  localStorage.setItem(MSG_KEY, JSON.stringify(db));
+}
+
 const wait = (ms = 250) => new Promise((r) => setTimeout(r, ms));
 const id = () => Math.random().toString(36).slice(2, 10);
 
