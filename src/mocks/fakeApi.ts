@@ -469,14 +469,17 @@ export const fakeApi = {
     return load().projects.find((p) => p.id === projectId) ?? null;
   },
 
-  async createProject(input: { title: string; description: string; techStack: string[] }) {
+  async createProject(input: { title: string; description: string; techStack: string[]; category?: import("@/types").ProjectCategory }) {
     await wait();
     const s = getSession();
     if (!s) throw new Error("Not logged in");
     const db = load();
     const project: Project = {
       id: "pr" + id(),
-      ...input,
+      title: input.title,
+      description: input.description,
+      techStack: input.techStack,
+      category: input.category ?? "general",
       ownerId: s.userId,
       memberIds: [s.userId],
       joinRequestIds: [],
@@ -487,6 +490,38 @@ export const fakeApi = {
     db.projects.unshift(project);
     save(db);
     return project;
+  },
+
+  // --- saved projects (bookmarks, stored per-user in localStorage)
+  _savedKey(userId: string) {
+    return `unisphere:saved-projects:${userId}`;
+  },
+  listSavedProjectIds(): string[] {
+    if (!isBrowser()) return [];
+    const s = getSession();
+    if (!s) return [];
+    try {
+      return JSON.parse(localStorage.getItem(`unisphere:saved-projects:${s.userId}`) || "[]");
+    } catch {
+      return [];
+    }
+  },
+  async listSavedProjects() {
+    await wait(40);
+    const ids = new Set(fakeApi.listSavedProjectIds());
+    return load().projects.filter((p) => ids.has(p.id));
+  },
+  async toggleSaveProject(projectId: string) {
+    const s = getSession();
+    if (!s) throw new Error("Not logged in");
+    if (!isBrowser()) return false;
+    const key = `unisphere:saved-projects:${s.userId}`;
+    const list: string[] = JSON.parse(localStorage.getItem(key) || "[]");
+    const i = list.indexOf(projectId);
+    if (i === -1) list.push(projectId);
+    else list.splice(i, 1);
+    localStorage.setItem(key, JSON.stringify(list));
+    return i === -1; // true if now saved
   },
 
   async requestJoinProject(projectId: string) {
