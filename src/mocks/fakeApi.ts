@@ -605,8 +605,115 @@ export const fakeApi = {
     };
   },
 
-  // --- messaging
-  ...messagingApi,
+  // --- messaging (peer-to-peer chat backed by localStorage)
+  async listConversations() {
+    await wait(40);
+    const s = getSession();
+    if (!s) return [] as Array<{
+      conversation: import("@/types").Conversation;
+      otherUser: User;
+      lastMessage: import("@/types").Message | null;
+      unread: number;
+    }>;
+    const msgDb = loadMessages();
+    const db = load();
+    return msgDb.conversations
+      .filter((c) => c.participantIds.includes(s.userId))
+      .map((c) => {
+        const otherId = c.participantIds.find((id) => id !== s.userId)!;
+        const otherUser = db.users.find((u) => u.id === otherId)!;
+        const msgs = msgDb.messages.filter((m) => m.conversationId === c.id);
+        const lastMessage = msgs[msgs.length - 1] ?? null;
+        const unread = msgs.filter((m) => m.senderId !== s.userId && !m.seen).length;
+        return { conversation: c, otherUser, lastMessage, unread };
+      })
+      .filter((row) => row.otherUser)
+      .sort((a, b) => +new Date(b.conversation.lastMessageAt) - +new Date(a.conversation.lastMessageAt));
+  },
+
+  async getOrCreateConversation(otherUserId: string) {
+    await wait(30);
+    const s = getSession();
+    if (!s) throw new Error("Not logged in");
+    const msgDb = loadMessages();
+    let conv = msgDb.conversations.find(
+      (c) =>
+        c.participantIds.length === 2 &&
+        c.participantIds.includes(s.userId) &&
+        c.participantIds.includes(otherUserId),
+    );
+    if (!conv) {
+      conv = {
+        id: "cv" + id(),
+        participantIds: [s.userId, otherUserId],
+        lastMessageAt: new Date().toISOString(),
+      };
+      msgDb.conversations.push(conv);
+      saveMessages(msgDb);
+    }
+    return conv;
+  },
+
+  async listMessages(conversationId: string) {
+    await wait(30);
+    const msgDb = loadMessages();
+    return msgDb.messages
+      .filter((m) => m.conversationId === conversationId)
+      .sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
+  },
+
+  async sendMessage(conversationId: string, content: string) {
+    await wait(40);
+    const s = getSession();
+    if (!s) throw new Error("Not logged in");
+    const trimmed = content.trim();
+    if (!trimmed) throw new Error("Message can't be empty");
+    const msgDb = loadMessages();
+    const conv = msgDb.conversations.find((c) => c.id === conversationId);
+    if (!conv) throw new Error("Conversation not found");
+    const msg: import("@/types").Message = {
+      id: "m" + id(),
+      conversationId,
+      senderId: s.userId,
+      content: trimmed,
+      createdAt: new Date().toISOString(),
+      seen: false,
+    };
+    msgDb.messages.push(msg);
+    conv.lastMessageAt = msg.createdAt;
+    saveMessages(msgDb);
+    emitRealtime({ type: "message:new", message: msg, actorId: s.userId });
+    return msg;
+  },
+
+  async markConversationSeen(conversationId: string) {
+    await wait(20);
+    const s = getSession();
+    if (!s) return;
+    const msgDb = loadMessages();
+    let changed = false;
+    msgDb.messages.forEach((m) => {
+      if (m.conversationId === conversationId && m.senderId !== s.userId && !m.seen) {
+        m.seen = true;
+        changed = true;
+      }
+    });
+    if (changed) {
+      saveMessages(msgDb);
+      emitRealtime({ type: "message:seen", conversationId, actorId: s.userId });
+    }
+  },
+
+  async unreadMessagesCount() {
+    const s = getSession();
+    if (!s) return 0;
+    const msgDb = loadMessages();
+    return msgDb.messages.filter((m) => {
+      if (m.senderId === s.userId || m.seen) return false;
+      const conv = msgDb.conversations.find((c) => c.id === m.conversationId);
+      return !!conv && conv.participantIds.includes(s.userId);
+    }).length;
+  },
 };
 
 export type FakeApi = typeof fakeApi;
