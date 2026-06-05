@@ -57,6 +57,13 @@ export type ConnectionRequest = {
   createdAt: string;
 };
 
+export type ProjectCategory =
+  | "general"
+  | "hackathon"
+  | "startup"
+  | "research"
+  | "team_request";
+
 export type Project = {
   id: string;
   title: string;
@@ -66,6 +73,7 @@ export type Project = {
   memberIds: string[];
   joinRequestIds: string[];
   status: "open" | "in_progress" | "completed";
+  category?: ProjectCategory;
   tasks: Task[];
   createdAt: string;
 };
