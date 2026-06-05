@@ -604,6 +604,9 @@ export const fakeApi = {
       pendingConnections: db.connections.filter((c) => c.status === "pending").length,
     };
   },
+
+  // --- messaging
+  ...messagingApi,
 };
 
 export type FakeApi = typeof fakeApi;
