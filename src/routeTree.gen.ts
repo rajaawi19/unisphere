@@ -19,6 +19,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppSearchRouteImport } from './routes/_app.search'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppNetworkRouteImport } from './routes/_app.network'
+import { Route as AppMessagesRouteImport } from './routes/_app.messages'
 import { Route as AppFeedRouteImport } from './routes/_app.feed'
 import { Route as AppProjectsIndexRouteImport } from './routes/_app.projects.index'
 import { Route as AppProjectsProjectIdRouteImport } from './routes/_app.projects.$projectId'
@@ -74,6 +75,11 @@ const AppNetworkRoute = AppNetworkRouteImport.update({
   path: '/network',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMessagesRoute = AppMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppFeedRoute = AppFeedRouteImport.update({
   id: '/feed',
   path: '/feed',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/feed': typeof AppFeedRoute
+  '/messages': typeof AppMessagesRoute
   '/network': typeof AppNetworkRoute
   '/notifications': typeof AppNotificationsRoute
   '/search': typeof AppSearchRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/feed': typeof AppFeedRoute
+  '/messages': typeof AppMessagesRoute
   '/network': typeof AppNetworkRoute
   '/notifications': typeof AppNotificationsRoute
   '/search': typeof AppSearchRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/verify-otp': typeof VerifyOtpRoute
   '/_app/feed': typeof AppFeedRoute
+  '/_app/messages': typeof AppMessagesRoute
   '/_app/network': typeof AppNetworkRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/search': typeof AppSearchRoute
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-otp'
     | '/feed'
+    | '/messages'
     | '/network'
     | '/notifications'
     | '/search'
@@ -176,6 +186,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-otp'
     | '/feed'
+    | '/messages'
     | '/network'
     | '/notifications'
     | '/search'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-otp'
     | '/_app/feed'
+    | '/_app/messages'
     | '/_app/network'
     | '/_app/notifications'
     | '/_app/search'
@@ -284,6 +296,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNetworkRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/messages': {
+      id: '/_app/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AppMessagesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/feed': {
       id: '/_app/feed'
       path: '/feed'
@@ -324,6 +343,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppFeedRoute: typeof AppFeedRoute
+  AppMessagesRoute: typeof AppMessagesRoute
   AppNetworkRoute: typeof AppNetworkRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppSearchRoute: typeof AppSearchRoute
@@ -335,6 +355,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppFeedRoute: AppFeedRoute,
+  AppMessagesRoute: AppMessagesRoute,
   AppNetworkRoute: AppNetworkRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppSearchRoute: AppSearchRoute,

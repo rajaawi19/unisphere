@@ -73,6 +73,50 @@ function save(db: DB) {
   localStorage.setItem(KEY, JSON.stringify(db));
 }
 
+// --- messaging store (separate key so existing data stays intact)
+const MSG_KEY = "unisphere:messages:v1";
+type MessagesDB = {
+  conversations: import("@/types").Conversation[];
+  messages: import("@/types").Message[];
+};
+function seedMessagesDB(): MessagesDB {
+  const now = Date.now();
+  const iso = (offsetMin: number) => new Date(now - offsetMin * 60_000).toISOString();
+  return {
+    conversations: [
+      { id: "cv1", participantIds: ["u1", "u2"], lastMessageAt: iso(4) },
+      { id: "cv2", participantIds: ["u1", "u6"], lastMessageAt: iso(120) },
+      { id: "cv3", participantIds: ["u1", "u4"], lastMessageAt: iso(60 * 26) },
+    ],
+    messages: [
+      { id: "m1", conversationId: "cv1", senderId: "u2", content: "Hey! Saw your post on the AI Study Buddy — love the idea.", createdAt: iso(45), seen: true },
+      { id: "m2", conversationId: "cv1", senderId: "u1", content: "Thanks 🙌 we need a frontend dev, want to jump in?", createdAt: iso(40), seen: true },
+      { id: "m3", conversationId: "cv1", senderId: "u2", content: "Yes! Send me the repo link.", createdAt: iso(4), seen: false },
+      { id: "m4", conversationId: "cv2", senderId: "u6", content: "Ready for the hackathon kickoff tonight?", createdAt: iso(125), seen: true },
+      { id: "m5", conversationId: "cv2", senderId: "u1", content: "100%. I'll bring the Figma board.", createdAt: iso(120), seen: true },
+      { id: "m6", conversationId: "cv3", senderId: "u4", content: "Hey Aman, can we sync on the research paper draft tomorrow?", createdAt: iso(60 * 26), seen: true },
+    ],
+  };
+}
+function loadMessages(): MessagesDB {
+  if (!isBrowser()) return seedMessagesDB();
+  const raw = localStorage.getItem(MSG_KEY);
+  if (raw) {
+    try {
+      return JSON.parse(raw) as MessagesDB;
+    } catch {
+      // reseed
+    }
+  }
+  const fresh = seedMessagesDB();
+  localStorage.setItem(MSG_KEY, JSON.stringify(fresh));
+  return fresh;
+}
+function saveMessages(db: MessagesDB) {
+  if (!isBrowser()) return;
+  localStorage.setItem(MSG_KEY, JSON.stringify(db));
+}
+
 const wait = (ms = 250) => new Promise((r) => setTimeout(r, ms));
 const id = () => Math.random().toString(36).slice(2, 10);
 
@@ -603,6 +647,116 @@ export const fakeApi = {
       colleges: db.colleges.length,
       pendingConnections: db.connections.filter((c) => c.status === "pending").length,
     };
+  },
+
+  // --- messaging (peer-to-peer chat backed by localStorage)
+  async listConversations() {
+    await wait(40);
+    const s = getSession();
+    if (!s) return [] as Array<{
+      conversation: import("@/types").Conversation;
+      otherUser: User;
+      lastMessage: import("@/types").Message | null;
+      unread: number;
+    }>;
+    const msgDb = loadMessages();
+    const db = load();
+    return msgDb.conversations
+      .filter((c) => c.participantIds.includes(s.userId))
+      .map((c) => {
+        const otherId = c.participantIds.find((id) => id !== s.userId)!;
+        const otherUser = db.users.find((u) => u.id === otherId)!;
+        const msgs = msgDb.messages.filter((m) => m.conversationId === c.id);
+        const lastMessage = msgs[msgs.length - 1] ?? null;
+        const unread = msgs.filter((m) => m.senderId !== s.userId && !m.seen).length;
+        return { conversation: c, otherUser, lastMessage, unread };
+      })
+      .filter((row) => row.otherUser)
+      .sort((a, b) => +new Date(b.conversation.lastMessageAt) - +new Date(a.conversation.lastMessageAt));
+  },
+
+  async getOrCreateConversation(otherUserId: string) {
+    await wait(30);
+    const s = getSession();
+    if (!s) throw new Error("Not logged in");
+    const msgDb = loadMessages();
+    let conv = msgDb.conversations.find(
+      (c) =>
+        c.participantIds.length === 2 &&
+        c.participantIds.includes(s.userId) &&
+        c.participantIds.includes(otherUserId),
+    );
+    if (!conv) {
+      conv = {
+        id: "cv" + id(),
+        participantIds: [s.userId, otherUserId],
+        lastMessageAt: new Date().toISOString(),
+      };
+      msgDb.conversations.push(conv);
+      saveMessages(msgDb);
+    }
+    return conv;
+  },
+
+  async listMessages(conversationId: string) {
+    await wait(30);
+    const msgDb = loadMessages();
+    return msgDb.messages
+      .filter((m) => m.conversationId === conversationId)
+      .sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
+  },
+
+  async sendMessage(conversationId: string, content: string) {
+    await wait(40);
+    const s = getSession();
+    if (!s) throw new Error("Not logged in");
+    const trimmed = content.trim();
+    if (!trimmed) throw new Error("Message can't be empty");
+    const msgDb = loadMessages();
+    const conv = msgDb.conversations.find((c) => c.id === conversationId);
+    if (!conv) throw new Error("Conversation not found");
+    const msg: import("@/types").Message = {
+      id: "m" + id(),
+      conversationId,
+      senderId: s.userId,
+      content: trimmed,
+      createdAt: new Date().toISOString(),
+      seen: false,
+    };
+    msgDb.messages.push(msg);
+    conv.lastMessageAt = msg.createdAt;
+    saveMessages(msgDb);
+    emitRealtime({ type: "message:new", message: msg, actorId: s.userId });
+    return msg;
+  },
+
+  async markConversationSeen(conversationId: string) {
+    await wait(20);
+    const s = getSession();
+    if (!s) return;
+    const msgDb = loadMessages();
+    let changed = false;
+    msgDb.messages.forEach((m) => {
+      if (m.conversationId === conversationId && m.senderId !== s.userId && !m.seen) {
+        m.seen = true;
+        changed = true;
+      }
+    });
+    if (changed) {
+      saveMessages(msgDb);
+      emitRealtime({ type: "message:seen", conversationId, actorId: s.userId });
+    }
+  },
+
+  async unreadMessagesCount() {
+    const s = getSession();
+    if (!s) return 0;
+    const msgDb = loadMessages();
+    return msgDb.messages.filter((m) => {
+      if (m.senderId === s.userId || m.seen) return false;
+      const conv = msgDb.conversations.find((c) => c.id === m.conversationId);
+      return !!conv && conv.participantIds.includes(s.userId);
+    }).length;
   },
 };
 
