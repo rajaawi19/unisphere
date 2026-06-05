@@ -1,12 +1,14 @@
 // Lightweight realtime bus for the mock backend.
 // Cross-tab via BroadcastChannel; same-tab via window CustomEvent fallback.
-import type { Post } from "@/types";
+import type { Post, Message } from "@/types";
 
 export type RealtimeEvent =
   | { type: "post:new"; post: Post; actorId: string }
   | { type: "post:update"; post: Post; actorId: string }
   | { type: "post:like"; post: Post; actorId: string }
-  | { type: "post:comment"; post: Post; actorId: string };
+  | { type: "post:comment"; post: Post; actorId: string }
+  | { type: "message:new"; message: Message; actorId: string }
+  | { type: "message:seen"; conversationId: string; actorId: string };
 
 const CHANNEL = "unisphere:realtime:v1";
 const WIN_EVT = "unisphere:realtime";
